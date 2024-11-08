@@ -54,3 +54,6 @@ To replicate this analysis, follow these steps:
 
    ```bash
    pip install pandas numpy matplotlib seaborn
+2. Run each code cell in sequence. The notebook first loads the data, and subsequent cells explore and analyze various aspects of the dataset.
+
+3. Load and inspect the dataset. You can start by examining the first few rows and proceed with further analysis.
