@@ -4,7 +4,7 @@ Welcome to my portfolio repository! This collection includes various assignments
 
 ## Table of Contents
 
-1. [Data Science Assignment 03](./Data%20Science%20Assignment%203)
+1. [Data Science Assignment 03](./Data%20Science%20Assignment%2003)
 2. [Data Science Assignment 04](./Data%20Science%20Assignment%2004)
 3. [Data Science Assignment 05](./Data%20Science%20Assignment%2005)
 4. [Techniques in Business Analytics Assignment 01](./Techniques%20in%20BA%20Assignment%2001)
