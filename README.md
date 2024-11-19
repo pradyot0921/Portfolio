@@ -4,7 +4,7 @@ Welcome to my portfolio repository! This collection includes various assignments
 
 ## Table of Contents
 
-1. [Loan Approval Risk Assessment and Predictive Modeling Using Logistic Regression and K-Nearest Neighbors](./Loan%20Approval%20Risk%20Assessment%20and%20Predictive%20Modeling%20Using%20Logistic%20Regression%20and%20K-Nearest%20Neighbors))
+1. [Loan Approval Risk Assessment and Predictive Modeling Using Logistic Regression and K-Nearest Neighbors](./Loan%20Approval%20Risk%20Assessment%20and%20Predictive%20Modeling%20Using%20Logistic%20Regression%20and%20K-Nearest%20Neighbors)
 2. [Diabetes Risk Prediction and Feature Analysis Using Machine Learning](./Diabetes%20Risk%20Prediction%20and%20Feature%20Analysis%20Using%20Machine%20Learning)
 3. [Data-Driven Analysis and Predictive Modeling for Sales, Profitability, and Customer Retention](./Data-Driven%20Analysis%20and%20Predictive%20Modeling%20for%20Sales%2C%20Profitability%2C%20and%20Customer%20Retention)
 4. [Customer Shopping Behavior Analysis Insights from Transactional Data](./Customer%20Shopping%20Behavior%20Analysis%20Insights%20from%20Transactional%20Data)
