@@ -10,6 +10,7 @@ Welcome to my portfolio repository! This collection includes various assignments
 4. [Customer Shopping Behavior Analysis Insights from Transactional Data](./Customer%20Shopping%20Behavior%20Analysis%20Insights%20from%20Transactional%20Data)
 5. [Critical Analysis of Vehicle Price Prediction Models](./Critical%20Analysis%20of%20Vehicle%20Price%20Prediction%20Models)
 6. [Analyzing Koala Physical Traits and Environmental Adaptations](./Analyzing%20Koala%20Physical%20Traits%20and%20Environmental%20Adaptations)
+7. [Global Terrorism Data Analysis: 1997-2017.](./Global%20terrorism%20Data%20Analysis_1997-2017)
 
 ## Overview
 
@@ -20,6 +21,7 @@ This portfolio demonstrates my skills in data science and business analytics. Ea
 - **Python** (Pandas, NumPy, Matplotlib, Seaborn, Scikit-Learn)
 - **Jupyter Notebooks**
 - **Git and GitHub**
+- **Power BI**
 
 ## License
 
