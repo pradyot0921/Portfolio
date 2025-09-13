@@ -1,0 +1,33 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# R / RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.Rapp.history
+
+# R Markdown / knitr artifacts
+*_cache/
+cache/
+*_files/
+*.utf8.md
+*.knit.md
+*.nb.html
+
+# Quarto (if used later)
+.qmd
+.quarto/
+
+# Python (if used later)
+__pycache__/
+.ipynb_checkpoints/
+
+# Power BI
+*.pbix-journal
+
+# Node / front-end (if any demos later)
+node_modules/
+dist/

@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite it as below."
+title: "Global Terrorism Analysis (1997–2017)"
+authors:
+  - family-names: Hussain
+  - family-names: Niketh
+  - family-names: Tarun
+  - family-names: Pradyot
+date-released: 2025-09-13
+version: "1.0.0"
+url: "https://github.com/pradyot0921/Global-terrorism-Data-Analysis_1997-2017"
+keywords:
+  - Global Terrorism Database
+  - Power BI
+  - R
+  - Data Visualization
+license: "MIT"
