@@ -1,0 +1,304 @@
+---
+title: "STAT8129 — Group 15 (Interactive Visualizations)"
+author: "Hussain Parvez Jhanjharya — 48610666  \nNiketh Girish Nair — 48632791  \nPradyot
+  Jain — 48479985  \nTarun Babu Tadela — 48480304\n"
+output:
+  html_document:
+    toc: true
+    toc_float: false
+    theme: flatly
+    df_print: paged
+  pdf_document:
+    toc: true
+---
+```{r}
+# Knit to Html to see interative visualisations
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, message = FALSE, warning = FALSE,
+  fig.width = 16, fig.height = 6,   # bigger figures
+  out.width = "100%", fig.align = "center")
+```
+```{r}
+# helper: install if missing
+use_pkg <- function(pkgs){
+  to_get <- pkgs[!pkgs %in% rownames(installed.packages())]
+  if(length(to_get)) install.packages(to_get, repos = "https://cloud.r-project.org")
+  invisible(lapply(pkgs, library, character.only = TRUE))
+}
+use_pkg(c("tidyverse","readxl","ggplot2","dplyr","plotly","janitor","scales","RColorBrewer","forcats","tidyr"))
+```
+
+
+# Load & clean
+```{r data}
+# Load
+gtd <- readxl::read_excel("Global_Terrorism_Data.xlsx") |> janitor::clean_names()
+
+# Standardize likely column names to what the code uses below
+std_name <- function(df, want, candidates){
+  if(!(want %in% names(df))){
+    hit <- candidates[candidates %in% names(df)]
+    if(length(hit)) df[[want]] <- df[[hit[1]]] else df[[want]] <- NA
+  }
+  df
+}
+gtd <- gtd |>
+  std_name("year", c("iyear")) |>
+  std_name("attack_type", c("attacktype1_txt","attack_type1","attacktype")) |>
+  std_name("target_type", c("targtype1_txt","target_type1","targtype")) |>
+  std_name("gname", c("group_name","perpetrator","group")) |>
+  std_name("weapon_type", c("weaptype1_txt","weapon","weaptype")) |>
+  std_name("country", c("country_txt","country_name")) |>
+  std_name("number_of_kill", c("nkill","killed","num_killed","n_killed")) |>
+  std_name("number_of_wounded", c("nwound","wounded","num_wounded","n_wounded"))
+
+# quick glance
+head(gtd)
+```
+# ---------------- Visualisations ----------------
+
+## 1) Incidents vs Fatalities (line + loess)
+
+```{r}
+kills_by_year <- gtd |>
+  group_by(year) |>
+  summarise(total_kills = sum(as.numeric(number_of_kill), na.rm=TRUE),
+            total_events = n(), .groups = "drop") |>
+  arrange(year)
+
+peak_years <- c(2001, 2007, 2014)
+reasons <- c("2001"="9/11 attacks in the U.S.",
+             "2007"="Insurgency in Iraq and Pakistan suicide bombings",
+             "2014"="ISIS insurgency causing 41,000+ deaths")
+
+peaks <- kills_by_year |>
+  filter(year %in% peak_years) |>
+  mutate(Reason = reasons[as.character(year)])
+
+a <- ggplot(kills_by_year, aes(x = year)) +
+  geom_line(aes(y = total_kills,  colour = "Total kills",  linetype = "Total kills"),  linewidth = 1) +
+  geom_line(aes(y = total_events, colour = "Total events", linetype = "Total events"), linewidth = 1) +
+  geom_smooth(aes(y = total_kills, colour = "Trend in deaths", linetype = "Trend in deaths"),
+              method = "loess", se = TRUE, fill = "#fb9a99") +
+  geom_point(data = peaks, aes(x = year, y = total_kills), size = 3, colour = "#1f78b4", inherit.aes = FALSE) +
+  geom_text (data = peaks, aes(x = year, y = total_kills + 2000, label = Reason), size = 3.5, colour = "black", inherit.aes = FALSE) +
+  scale_color_manual("Legend",   values = c("Total kills"="#1f78b4","Total events"="black","Trend in deaths"="#e31a1c")) +
+  scale_linetype_manual("Legend",values = c("Total kills"="solid","Total events"="dashed","Trend in deaths"="solid")) +
+  labs(title="Global Terrorism: Incidents vs Fatalities (1997–2017)",
+       subtitle="Loess trend shown for deaths", x="Year", y="Count") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom",
+        legend.title = element_text(size = 9, face = "bold"),
+        legend.text  = element_text(size = 8))
+
+ggplotly(a, tooltip = c("x","y","colour"), dynamicTicks = TRUE)
+```
+
+## 2) Lollipop — Frequency of Attack Types
+
+```{r}
+attack_counts <- gtd |>
+  count(attack_type, name="events") |>
+  arrange(desc(events)) |>
+  mutate(attack_type=fct_reorder(attack_type, events))
+
+b <- ggplot(attack_counts, aes(events, attack_type,
+                               text=paste0("Attack Type: ", attack_type, "<br>Events: ", scales::comma(events)))) +
+  geom_segment(aes(x=0, xend=events, yend=attack_type), color="#1f78b4", linewidth=0.8) +
+  geom_point(size=4, color="#1f78b4") +
+  labs(title="Frequency of Attack Types (1997–2017)", x="Number of events", y=NULL) +
+  scale_x_continuous(labels=scales::comma) +
+  theme_minimal(base_size=14) +
+  theme(plot.title=element_text(face="bold"), panel.grid.major.y=element_blank())
+
+ggplotly(b, tooltip="text")
+```
+
+## 3) Sunburst — Target Types (small slices → “Others”)
+```{r}
+threshold <- 0.015
+target_counts <- gtd |>
+  count(target_type, name="events") |>
+  mutate(group = if_else(events/sum(events) < threshold, "Others", target_type)) |>
+  group_by(group) |>
+  summarise(events = sum(events), .groups="drop") |>
+  arrange(desc(events))
+
+plot_ly(target_counts, type="sunburst",
+        labels=~group, parents=rep("", nrow(target_counts)), values=~events,
+        textinfo="label+percent entry",
+        hovertemplate="<b>%{label}</b><br>Events: %{value:,}<br>Share: %{percentRoot:.1%}<extra></extra>") |>
+  layout(title="Target Types of Terrorist Attacks (1997–2017)")
+```
+
+## 4) Stacked Bars — Attack type × Target type
+
+```{r}
+stacked_data <- gtd |>
+  filter(attack_type != "Unknown", target_type != "Other") |>
+  count(target_type, attack_type, name = "events") |>
+  group_by(target_type) |> mutate(total = sum(events)) |> ungroup() |>
+  arrange(desc(events))
+
+annot_targets <- c("Business","Government (General)","Military","Police","Private Citizens & Property")
+annotations_df <- stacked_data |>
+  filter(target_type %in% annot_targets) |>
+  summarise(.by = target_type, total = sum(events)) |>
+  mutate(label = paste0("Total: ", scales::comma(total)))
+
+c <- ggplot(stacked_data, aes(target_type, events, fill = attack_type,
+                              text = paste0("<b>Target:</b> ", target_type,
+                                            "<br><b>Attack:</b> ", attack_type,
+                                            "<br><b>Events:</b> ", scales::comma(events)))) +
+  geom_bar(stat = "identity") +
+  geom_text(data = annotations_df, aes(target_type, total * 1.05, label = label),
+            inherit.aes = FALSE, size = 3, fontface = "bold") +
+  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, .10))) +
+  scale_fill_brewer(palette = "OrRd", name = "Attack type") +
+  labs(title = "Frequency of attack types done on various targets (1997–2017)",
+       subtitle = "Stacked incidents by attack type; ‘Unknown’ removed",
+       x = "Target type", y = "Number of events") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom", axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplotly(c, tooltip = "text")
+```
+
+## 5) Heatmap — Avg casualties/event by Year × Target (Top 10)
+
+```{r}
+sev <- gtd |>
+  group_by(year, target_type) |>
+  summarise(events=n(),
+            killed=sum(as.numeric(number_of_kill),na.rm=TRUE),
+            wounded=sum(as.numeric(number_of_wounded),na.rm=TRUE),
+            .groups="drop") |>
+  mutate(severity=(killed+wounded)/pmax(events,1))
+
+top_targets <- sev |> count(target_type, wt=events, name="total") |> slice_max(total, n=10) |> pull(target_type)
+sev2 <- sev |>
+  filter(target_type %in% top_targets) |>
+  mutate(severity_cap=pmin(severity, quantile(severity, .95, na.rm=TRUE))) |>
+  mutate(target_type=fct_reorder(target_type, events, .fun=sum, .desc=TRUE))
+
+d <- ggplot(sev2, aes(x=factor(year), y=target_type,
+                      fill=severity_cap,
+                      text=paste0("<b>Year:</b> ",year,"<br><b>Target:</b> ",target_type,
+                                  "<br><b>Events:</b> ",scales::comma(events),
+                                  "<br><b>Killed:</b> ",scales::comma(killed),
+                                  "<br><b>Wounded:</b> ",scales::comma(wounded),
+                                  "<br><b>Avg casualties/event:</b> ",round(severity,2)))) +
+  geom_tile() +
+  scale_fill_gradient(name="Avg casualties\nper event", low="white", high="#e31a1c",
+                      labels=scales::label_number(accuracy=0.1)) +
+  labs(title="Severity of Attacks by Target Type (Top 10, 1997–2017)",
+       subtitle="Average casualties (killed + wounded) per event • Values capped at 95th percentile",
+       x="Year", y="Target type") +
+  theme_minimal(base_size=13) +
+  theme(axis.text.x=element_text(angle=45, hjust=1))
+
+ggplotly(d, tooltip="text")
+```
+
+## 6) Stacked Area — Activity of Top-10 Groups
+
+```{r}
+top_groups <- gtd |>
+  filter(gname != "Unknown") |>
+  count(gname, name = "total") |>
+  slice_max(total, n = 10) |>
+  arrange(desc(total)) |> pull(gname)
+
+yrs <- seq(min(gtd$year, na.rm=TRUE), max(gtd$year, na.rm=TRUE))
+group_activity <- gtd |>
+  filter(gname %in% top_groups) |>
+  count(year, gname, name = "events") |>
+  tidyr::complete(year = yrs, gname = top_groups, fill = list(events = 0)) |>
+  mutate(Group = factor(gname, levels = top_groups),
+         Year = year, Events = events) |>
+  select(Year, Group, Events)
+
+plot_ly(group_activity, x=~Year, y=~Events, color=~Group, colors="Set3",
+        type="scatter", mode="none", stackgroup="one",
+        hovertemplate="<b>%{fullData.name}</b><br>Year: %{x}<br>Events: %{y:,}<extra></extra>") |>
+  layout(title="Activity of Top 10 Terrorist Groups (1997–2017)",
+         xaxis=list(title="Year"),
+         yaxis=list(title="Number of events", rangemode="tozero"),
+         legend=list(orientation="v", x=1.05, y=0.5))
+```
+
+## 7) Weapons by Year for Top-4 Groups (Faceted)
+
+```{r}
+top_groups4 <- gtd |>
+  filter(gname!="Unknown") |>
+  count(gname, sort=TRUE) |>
+  slice_head(n=4) |>
+  pull(gname)
+
+gw <- gtd |>
+  filter(gname %in% top_groups4, weapon_type!="Unknown") |>
+  count(year, gname, weapon_type, name="events") |>
+  group_by(gname) |> mutate(total_group=sum(events)) |> ungroup() |>
+  mutate(Group=fct_reorder(gname, total_group, .desc=TRUE),
+         Weapon=if_else(grepl("^Vehicle", weapon_type), "Vehicle", weapon_type),
+         Year=year, Events=events)
+
+e <- ggplot(gw, aes(Year, Events, fill=Weapon,
+                    text=paste0("<b>Group:</b> ", Group,
+                                "<br><b>Year:</b> ", Year,
+                                "<br><b>Weapon:</b> ", Weapon,
+                                "<br><b>Events:</b> ", scales::comma(Events)))) +
+  geom_col() +
+  facet_wrap(~Group, ncol=2, scales="free_y") +
+  scale_fill_brewer(palette="OrRd", direction=-1, name="Weapon type") +
+  scale_y_continuous(labels=scales::comma, expand=expansion(mult=c(0,.05))) +
+  labs(title="Weapon Use Over Time by Top Terror Groups (1997–2017)",
+       subtitle="Stacked incidents by weapon type (Unknown removed)",
+       x="Year", y="Number of events") +
+  theme_minimal(base_size=13) +
+  theme(legend.position="bottom", axis.text.x=element_text(angle=45, hjust=1))
+
+ggplotly(e, tooltip="text")
+```
+
+## 8) World Map — Incidents by Country
+
+```{r}
+# incidents by country (fix names so plotly recognizes them)
+country_counts <- gtd %>%
+  mutate(country_map = dplyr::recode(country,
+                                     "Russia"="Russian Federation",
+                                     "United States"="United States of America",
+                                     "Congo, Democratic Republic of the"="Democratic Republic of the Congo",
+                                     "Congo"="Republic of the Congo",
+                                     "Syria"="Syrian Arab Republic",
+                                     "Venezuela"="Venezuela",
+                                     "Laos"="Lao PDR",
+                                     "Iran, Islamic Republic of"="Iran",
+                                     "Tanzania, United Republic of"="Tanzania",
+                                     "Macedonia"="North Macedonia",
+                                     "Czech Republic"="Czechia",
+                                     .default = country)) %>%
+  count(country_map, name = "incidents")
+
+# choropleth (country names mode) + clean hover + natural earth projection
+plot_geo(country_counts) %>%
+  add_trace(
+    locations = ~country_map, locationmode = "country names",
+    z = ~incidents, color = ~incidents, colors = "Reds",
+    text = ~paste0("<b>", country_map, "</b><br>Incidents: ", comma(incidents)),
+    hovertemplate = "%{text}<extra></extra>"
+  ) %>%
+  colorbar(title = "Incidents", tickformat = ",") %>%
+  layout(
+    title = list(text = sprintf("Terrorist Incidents by Country (1997-2017)")),
+    geo = list(showframe = FALSE, showcoastlines = TRUE, coastlinecolor = "gray70",
+               projection = list(type = "natural earth"))
+  )
+```
+
+# ---------------- THANK YOU ----------------
