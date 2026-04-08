@@ -6,19 +6,19 @@ An interactive, one-page Power BI dashboard designed as a **modern CV portfolio*
 
 ## 🔗 Live Interactive Dashboard
 
-👉 [View Dashboard](./powerbi-cv-dashboard/Pradyot_Jain_PowerBI_CV_Dashboard.pbix)
+👉 [View Dashboard](./Pradyot_Jain_PowerBI_CV_Dashboard.pbix)
 
 ---
 
 ## 📄 PDF Version
 
-👉 [Download CV Dashboard](./powerbi-cv-dashboard/Pradyot_Jain_PowerBI_CV_Dashboard.pdf)
+👉 [Download CV Dashboard](./Pradyot_Jain_PowerBI_CV_Dashboard.pdf)
 
 ---
 
 ## 🖼 Dashboard Preview
 
-![Full Dashboard](./powerbi-cv-dashboard/images/dashboard_full.png)
+![Full Dashboard](./images/dashboard_full.png)
 
 ---
 
