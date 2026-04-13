@@ -21,6 +21,8 @@ This portfolio demonstrates my skills in data science and business analytics. Ea
 ### Technologies Used
 
 - **Python** (Pandas, NumPy, Matplotlib, Seaborn, Scikit-Learn)
+- **R Programming**
+- **Microsoft Excel**
 - **Jupyter Notebooks**
 - **Git and GitHub**
 - **Power BI**
