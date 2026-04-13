@@ -170,6 +170,6 @@ power-bi-ecommerce-performance-dashboard/
 ├── ecommerce-dashboard-report.pdf
 ├── ecommerce_sales_34500.csv
 └── images/
-    ├── dashboard-preview.png
-    ├── advanced-insights.png
-    └── key-insights.png
+    ├── dashboard_preview.png
+    ├── advanced_insights.png
+    └── key_insights.png
