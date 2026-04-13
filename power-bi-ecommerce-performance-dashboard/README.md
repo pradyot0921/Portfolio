@@ -19,26 +19,26 @@ The dashboard is structured into three connected report pages:
 ---
 ## Live Interactive Dashboard
 
-👉 [View Dashboard](power-bi-ecommerce-performance-dashboard/ecommerce-powerbi-dashboard.pbix)
+👉 [View Dashboard](./ecommerce-powerbi-dashboard.pbix)
 
 ---
 
 ## PDF Version
 
-👉 [Download Analytical Dashboard](power-bi-ecommerce-performance-dashboard/ecommerce-dashboard-report.pdf)
+👉 [Download Analytical Dashboard](./ecommerce-dashboard-report.pdf)
 
 ---
 
 ## Dashboard Preview
 
 ### Executive Overview
-![Executive Overview](power-bi-ecommerce-performance-dashboard/images/dashboard_preview.png)
+![Executive Overview](./images/dashboard_preview.png)
 
 ### Advanced Insights & Drivers Analysis
-![Advanced Insights](power-bi-ecommerce-performance-dashboard/images/advanced_insights.png)
+![Advanced Insights](./images/advanced_insights.png)
 
 ### Key Insights & Recommendations
-![Key Insights](power-bi-ecommerce-performance-dashboard/images/key_insights.png)
+![Key Insights](./images/key_insights.png)
 
 ---
 
