@@ -79,6 +79,19 @@ The result is a clear recommended order quantity for each item.
 
 ---
 
+## Data Confidentiality
+
+This workbook is a demonstration version of a portfolio. It uses:
+
+- Anonymised product names
+- Synthetic sales data
+- Sample inventory values
+- Sample demand assumptions
+
+No confidential workplace, supplier, customer, or financial data is included.
+
+---
+
 ## Workbook Sheets
 
 ### 1. Instructions
