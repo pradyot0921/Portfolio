@@ -12,8 +12,8 @@ This is a portfolio version of the workbook. It uses anonymised product names an
 
 ## Project Files
 
-- [Download the Excel Workbook](fast-food-inventory-order-planner/Fast_Food_Inventory_Order_Planner.xlsx)
-- [View Workbook Logic Summary](fast-food-inventory-order-planner/documentation/workbook_logic_summary.pdf)
+- [Download the Excel Workbook](Fast_Food_Inventory_Order_Planner.xlsx)
+- [View Workbook Logic Summary](documentation/workbook_logic_summary.pdf)
 
 ---
 
@@ -21,19 +21,19 @@ This is a portfolio version of the workbook. It uses anonymised product names an
 
 ### Order Planner
 
-![Order Planner Preview](fast-food-inventory-order-planner/images/order_planner_preview.png)
+![Order Planner Preview](images/order_planner_preview.png)
 
 ### Forecast Model
 
-![Forecast Model Preview](fast-food-inventory-order-planner/images/forecast_preview.png)
+![Forecast Model Preview](images/forecast_preview.png)
 
 ### Setup
 
-![Setup Preview](fast-food-inventory-order-planner/images/setup_preview.png)
+![Setup Preview](images/setup_preview.png)
 
 ### Usage Rates
 
-![Usage Rates Preview](fast-food-inventory-order-planner/images/usage_rates_preview.png)
+![Usage Rates Preview](images/usage_rates_preview.png)
 
 ---
 
