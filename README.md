@@ -13,6 +13,7 @@ Welcome to my portfolio repository! This collection includes various assignments
 7. [Global Terrorism Data Analysis: 1997-2017.](./Global%20terrorism%20Data%20Analysis_1997-2017)
 8. [Car Price Prediction - Gradient Boosting Ensemble Approach](./Car%20Price%20Prediction%20%E2%80%94%20Gradient%20Boosting%20Ensemble%20Approach)
 9. [powerbi-cv-dashboard](https://github.com/pradyot0921/Portfolio/tree/9d21a643a051e5c4097a7027427eb7f8bed5f1ed/powerbi-cv-dashboard)
+10. [fast-food-inventory-order-planner](https://github.com/pradyot0921/Portfolio/tree/615e588dc517731b2d0314b581db3e002c9b4022/fast-food-inventory-order-planner)
 
 ## Overview
 
